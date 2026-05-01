@@ -9,6 +9,7 @@ SDL_IMAGE_PATH := ../SDL2_image
 
 LOCAL_C_INCLUDES := \
     $(LOCAL_PATH)/$(SDL_PATH)/include \
+    $(LOCAL_PATH)/$(SDL_PATH)/include_compat \
     $(LOCAL_PATH)/$(SDL_IMAGE_PATH)
 
 LOCAL_SRC_FILES := \
@@ -34,9 +35,9 @@ LOCAL_SRC_FILES := \
     sdlpop/opl3.c \
     sdlpop/stb_vorbis.c
 
-LOCAL_CFLAGS := -D_GNU_SOURCE=1 -std=c99 \
+LOCAL_CFLAGS := -std=c99 \
     -Wno-unused-result -Wno-macro-redefined -Wno-pointer-sign \
-    -Wno-format -Wno-implicit-function-declaration
+    -Wno-format
 
 LOCAL_SHARED_LIBRARIES := SDL2 SDL2_image
 

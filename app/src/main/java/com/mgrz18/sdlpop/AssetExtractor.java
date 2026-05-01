@@ -27,7 +27,8 @@ final class AssetExtractor {
         }
         Log.i(TAG, "Extracting assets to " + internalDir.getAbsolutePath());
         try {
-            copyAssetDir(context.getAssets(), ROOT_ASSET_DIR, new File(internalDir, ROOT_ASSET_DIR));
+            File rootOut = new File(internalDir, ROOT_ASSET_DIR);
+            copyAssetDir(context.getAssets(), ROOT_ASSET_DIR, rootOut, rootOut.getCanonicalFile());
             if (!marker.createNewFile()) {
                 Log.w(TAG, "Could not create marker file.");
             }
@@ -37,10 +38,11 @@ final class AssetExtractor {
         }
     }
 
-    private static void copyAssetDir(AssetManager assets, String assetPath, File outDir) throws IOException {
+    private static void copyAssetDir(AssetManager assets, String assetPath, File outDir, File rootCanonical) throws IOException {
+        ensureWithinRoot(rootCanonical, outDir);
         String[] entries = assets.list(assetPath);
         if (entries == null || entries.length == 0) {
-            copyAssetFile(assets, assetPath, outDir);
+            copyAssetFile(assets, assetPath, outDir, rootCanonical);
             return;
         }
         if (!outDir.exists() && !outDir.mkdirs()) {
@@ -51,14 +53,15 @@ final class AssetExtractor {
             File childOut = new File(outDir, entry);
             String[] grandChildren = assets.list(childAssetPath);
             if (grandChildren != null && grandChildren.length > 0) {
-                copyAssetDir(assets, childAssetPath, childOut);
+                copyAssetDir(assets, childAssetPath, childOut, rootCanonical);
             } else {
-                copyAssetFile(assets, childAssetPath, childOut);
+                copyAssetFile(assets, childAssetPath, childOut, rootCanonical);
             }
         }
     }
 
-    private static void copyAssetFile(AssetManager assets, String assetPath, File outFile) throws IOException {
+    private static void copyAssetFile(AssetManager assets, String assetPath, File outFile, File rootCanonical) throws IOException {
+        ensureWithinRoot(rootCanonical, outFile);
         File parent = outFile.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
             throw new IOException("Failed to create parent: " + parent);
@@ -67,9 +70,17 @@ final class AssetExtractor {
              OutputStream out = new FileOutputStream(outFile)) {
             byte[] buf = new byte[8192];
             int n;
-            while ((n = in.read(buf)) > 0) {
-                out.write(buf, 0, n);
+            while ((n = in.read(buf)) != -1) {
+                if (n > 0) out.write(buf, 0, n);
             }
+        }
+    }
+
+    private static void ensureWithinRoot(File rootCanonical, File child) throws IOException {
+        String rootPath = rootCanonical.getPath();
+        String childPath = child.getCanonicalPath();
+        if (!childPath.equals(rootPath) && !childPath.startsWith(rootPath + File.separator)) {
+            throw new IOException("Refusing path traversal: " + childPath + " escapes " + rootPath);
         }
     }
 }
