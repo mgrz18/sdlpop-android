@@ -1,0 +1,33 @@
+# Gradle / build
+.gradle/
+build/
+app/build/
+captures/
+.cxx/
+local.properties
+
+# Native build artifacts
+app/.cxx/
+app/jni/SDL/build/
+app/jni/SDL2_image/build/
+*.o
+*.so.dbg
+
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# APKs (generated, not source)
+*.apk
+*.aab
+!releases/*.apk
+
+# Logs
+*.log
