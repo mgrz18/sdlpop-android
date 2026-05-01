@@ -20,6 +20,24 @@ The authors of this program may be contacted at https://forum.princed.org
 
 #include "common.h"
 
+#ifdef __ANDROID__
+#include <SDL.h>
+#include <unistd.h>
+#include <android/log.h>
+#define POP_LOG(...) __android_log_print(ANDROID_LOG_INFO, "SDLPoP", __VA_ARGS__)
+static void android_setup_paths(void) {
+    const char *base = SDL_AndroidGetInternalStoragePath();
+    if (base != NULL) {
+        if (chdir(base) == 0) {
+            POP_LOG("chdir to internal storage: %s", base);
+        } else {
+            POP_LOG("chdir FAILED for: %s", base);
+        }
+    } else {
+        POP_LOG("SDL_AndroidGetInternalStoragePath returned NULL");
+    }
+}
+#endif
 
 #ifdef __amigaos4__
 static const char version[] = "\0$VER: SDLPoP " SDLPOP_VERSION " (" __AMIGADATE__ ")";
@@ -32,6 +50,9 @@ static const char stack[] = "$STACK:200000";
 
 int main(int argc, char *argv[])
 {
+#ifdef __ANDROID__
+    android_setup_paths();
+#endif
 	#ifdef __PSP__
 	scePowerSetClockFrequency(333,333,166);
 	#endif
