@@ -1,5 +1,8 @@
 # SDLPoP Android
 
+> **Trabajo derivado de [NagyD/SDLPoP](https://github.com/NagyD/SDLPoP)** (GPLv3).
+> Este repositorio importa los sources de SDLPoP como snapshot y los compila para Android. No es un fork de GitHub formal porque la historia se inicializó nueva — la relación se documenta aquí. Todo el crédito del juego en sí va al equipo de NagyD; este proyecto solo aporta la capa Android (build system, touch overlay, asset extraction).
+
 Port no oficial de SDLPoP a Android, jugable con controles táctiles.
 
 ## Qué es
