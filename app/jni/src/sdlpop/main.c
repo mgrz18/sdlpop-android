@@ -23,8 +23,21 @@ The authors of this program may be contacted at https://forum.princed.org
 #ifdef __ANDROID__
 #include <SDL.h>
 #include <unistd.h>
+#include <jni.h>
 #include <android/log.h>
 #define POP_LOG(...) __android_log_print(ANDROID_LOG_INFO, "SDLPoP", __VA_ARGS__)
+
+JNIEXPORT jboolean JNICALL
+Java_com_mgrz18_sdlpop_PoPNative_isMenuShown(JNIEnv *env, jclass clazz) {
+    (void)env; (void)clazz;
+    return is_menu_shown != 0 ? JNI_TRUE : JNI_FALSE;
+}
+
+JNIEXPORT jboolean JNICALL
+Java_com_mgrz18_sdlpop_PoPNative_isCheatsEnabled(JNIEnv *env, jclass clazz) {
+    (void)env; (void)clazz;
+    return cheats_enabled != 0 ? JNI_TRUE : JNI_FALSE;
+}
 static void android_setup_paths(void) {
     const char *base = SDL_AndroidGetInternalStoragePath();
     if (base != NULL) {
@@ -36,6 +49,10 @@ static void android_setup_paths(void) {
     } else {
         POP_LOG("SDL_AndroidGetInternalStoragePath returned NULL");
     }
+}
+
+static void android_disable_accelerometer_joystick(void) {
+    SDL_SetHint(SDL_HINT_ACCELEROMETER_AS_JOYSTICK, "0");
 }
 #endif
 
@@ -52,6 +69,7 @@ int main(int argc, char *argv[])
 {
 #ifdef __ANDROID__
     android_setup_paths();
+    android_disable_accelerometer_joystick();
 #endif
 	#ifdef __PSP__
 	scePowerSetClockFrequency(333,333,166);
