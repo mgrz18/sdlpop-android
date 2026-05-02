@@ -1,1 +1,1 @@
-/Users/miguel_garcia/Documents/Proyectos/sdlpop/sdlpop-android/app/jni/SDL/include/SDL_opengles2_khrplatform.h
+#include <SDL_opengles2_khrplatform.h>

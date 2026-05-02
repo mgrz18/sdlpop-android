@@ -1,1 +1,1 @@
-/Users/miguel_garcia/Documents/Proyectos/sdlpop/sdlpop-android/app/jni/SDL/include/SDL_system.h
+#include <SDL_system.h>

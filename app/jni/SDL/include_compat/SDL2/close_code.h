@@ -1,1 +1,1 @@
-/Users/miguel_garcia/Documents/Proyectos/sdlpop/sdlpop-android/app/jni/SDL/include/close_code.h
+#include <close_code.h>

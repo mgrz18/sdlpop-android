@@ -42,7 +42,7 @@ Requisitos del entorno de build:
 Pasos:
 
 ```
-git clone <este-repo> sdlpop-android
+git clone https://github.com/mgrz18/sdlpop-android.git
 cd sdlpop-android
 echo "sdk.dir=/ruta/a/tu/Android/sdk" > local.properties
 ./gradlew assembleDebug
